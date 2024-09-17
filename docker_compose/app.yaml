@@ -1,0 +1,15 @@
+services:
+  chat:
+    container_name: chat
+    build: ..
+    command: python3 app/main.py --bind 0.0.0.0 
+    ports:
+      - '8000:8000'
+    volumes:
+      - ..:/chat
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
