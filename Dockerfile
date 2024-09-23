@@ -10,13 +10,13 @@ RUN pip install --upgrade pip
 RUN pip install poetry
 
 # Создание рабочей директории
-RUN mkdir /currency_exchange
+RUN mkdir /chat
 
 # Установка рабочей директории
-WORKDIR /currency_exchange
+WORKDIR /chat
 
 # Копирование файлов
-COPY pyproject.toml poetry.lock /currency_exchange/
+COPY pyproject.toml poetry.lock /chat/
 RUN poetry config virtualenvs.create false
 RUN poetry install --no-root --no-interaction --no-ansi
 

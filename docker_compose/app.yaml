@@ -1,12 +1,14 @@
 services:
-  chat:
-    container_name: chat
+  main-app:
+    container_name: main-app
     build: ..
-    command: python3 app/main.py --bind 0.0.0.0 
+    command: "uvicorn --factory app.application.api.main:create_app --reload --host 0.0.0.0 --port 8000" 
     ports:
-      - '8000:8000'
+      - '${API_PORT}:8000'
     volumes:
-      - ..:/chat
+      - ../app/:/app
+    env_file:
+      - ../.env
     networks:
       - backend
 

@@ -1,5 +1,5 @@
 DC = docker compose
-SERVICE_NAME = currency_exchange
+SERVICE_NAME = main-app
 APP_FILE = docker_compose/app.yaml
 STORAGE_FILE = docker_compose/storage.yaml
 
