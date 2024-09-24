@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 @dataclass(eq=False)
-class ApplicationExcaption(Exception):
+class ApplicationException(Exception):
     
     @property
     def message(self):

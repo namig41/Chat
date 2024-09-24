@@ -1,8 +1,10 @@
 services:
   main-app:
     container_name: main-app
-    build: ..
-    command: "uvicorn --factory app.application.api.main:create_app --reload --host 0.0.0.0 --port 8000" 
+    build: 
+      context: ..
+      dockerfile: Dockerfile
+    command: "uvicorn --factory application.api.main:create_app --reload --host 0.0.0.0 --port 8000" 
     ports:
       - '${API_PORT}:8000'
     volumes:

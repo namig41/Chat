@@ -1,13 +1,57 @@
 from dataclasses import dataclass, field
+from datetime import datetime
 from uuid import uuid4
 
-from domain.values.messages import Text
+from domain.entities.base import BaseEntity
+from domain.values.messages import Title, Text
 
 @dataclass
-class Message:
+class Message(BaseEntity):
+    
     oid: str = field(
-        default_factory=lambda: str(uuid4),
+        default_factory=lambda: str(uuid4()),
         kw_only=True
     )
+    
     text: Text
     
+    create_at: datetime = field(
+        default_factory=datetime.now,
+        kw_only=True
+    )
+    
+    def __hash__(self) -> int:
+        return hash(self.oid)
+    
+
+    def __eq__(self, _value: 'BaseEntity') -> bool:
+        return self.oid == _value.oid
+    
+@dataclass
+class Chat(BaseEntity):
+    oid: str = field(
+        default_factory=lambda: str(uuid4()),
+        kw_only=True
+    )
+    
+    title: Title
+    
+    messages: set[Message] = field(
+        default_factory=set,
+        kw_only=True
+    )
+    
+    def add_message(self, message: Message):
+        self.messages.add(message)
+    
+    create_at: datetime = field(
+        default_factory=datetime.now,
+        kw_only=True
+    )
+    
+    def __hash__(self) -> int:
+        return hash(self.oid)
+    
+
+    def __eq__(self, _value: 'BaseEntity') -> bool:
+        return self.oid == _value.oid
