@@ -2,11 +2,10 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from uuid import uuid4
 
-from domain.entities.base import BaseEntity
 from domain.values.messages import Title, Text
 
 @dataclass
-class Message(BaseEntity):
+class Message:
     
     oid: str = field(
         default_factory=lambda: str(uuid4()),
@@ -24,11 +23,11 @@ class Message(BaseEntity):
         return hash(self.oid)
     
 
-    def __eq__(self, _value: 'BaseEntity') -> bool:
+    def __eq__(self, _value: 'Message') -> bool:
         return self.oid == _value.oid
     
 @dataclass
-class Chat(BaseEntity):
+class Chat:
     oid: str = field(
         default_factory=lambda: str(uuid4()),
         kw_only=True
@@ -53,5 +52,5 @@ class Chat(BaseEntity):
         return hash(self.oid)
     
 
-    def __eq__(self, _value: 'BaseEntity') -> bool:
+    def __eq__(self, _value: 'Chat') -> bool:
         return self.oid == _value.oid
