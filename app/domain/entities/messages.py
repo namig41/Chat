@@ -2,10 +2,12 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from uuid import uuid4
 
+from domain.entities.base import BaseEntity
+from domain.events.messages import NewMessageReceivedEvent
 from domain.values.messages import Title, Text
 
-@dataclass
-class Message:
+@dataclass(eq=False)
+class Message(BaseEntity):
     
     oid: str = field(
         default_factory=lambda: str(uuid4()),
@@ -19,15 +21,8 @@ class Message:
         kw_only=True
     )
     
-    def __hash__(self) -> int:
-        return hash(self.oid)
-    
-
-    def __eq__(self, _value: 'Message') -> bool:
-        return self.oid == _value.oid
-    
-@dataclass
-class Chat:
+@dataclass(eq=False)
+class Chat(BaseEntity):
     oid: str = field(
         default_factory=lambda: str(uuid4()),
         kw_only=True
@@ -40,17 +35,16 @@ class Chat:
         kw_only=True
     )
     
-    def add_message(self, message: Message):
-        self.messages.add(message)
-    
     create_at: datetime = field(
         default_factory=datetime.now,
         kw_only=True
     )
     
-    def __hash__(self) -> int:
-        return hash(self.oid)
-    
-
-    def __eq__(self, _value: 'Chat') -> bool:
-        return self.oid == _value.oid
+    def add_message(self, message: Message):
+        self.messages.add(message)
+        
+        self.register_event(NewMessageReceivedEvent(
+            message_text=message.text.as_generic_type(),
+            chat_oid=self.oid,
+            message_oid=message.oid,
+        ))

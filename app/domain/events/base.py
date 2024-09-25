@@ -4,10 +4,6 @@ from uuid import UUID, uuid4
 
 @dataclass
 class BaseEvent(ABC):
-    event_id: str = field(
-        default_factory=lambda: str(uuid4())
-    )
-    
-    @property
-    
+    event_id: UUID = field(default_factory=uuid4(), kw_only=True)
+        
     
