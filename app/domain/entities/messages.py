@@ -3,17 +3,11 @@ from datetime import datetime
 from uuid import uuid4
 
 from domain.entities.base import BaseEntity
-from domain.events.messages import NewMessageReceivedEvent
+from domain.events.messages import NewChatCreated, NewMessageReceivedEvent
 from domain.values.messages import Title, Text
 
 @dataclass(eq=False)
-class Message(BaseEntity):
-    
-    oid: str = field(
-        default_factory=lambda: str(uuid4()),
-        kw_only=True
-    )
-    
+class Message(BaseEntity):    
     text: Text
     
     create_at: datetime = field(
@@ -23,8 +17,8 @@ class Message(BaseEntity):
     
 @dataclass(eq=False)
 class Chat(BaseEntity):
-    oid: str = field(
-        default_factory=lambda: str(uuid4()),
+    create_at: datetime = field(
+        default_factory=datetime.now,
         kw_only=True
     )
     
@@ -35,10 +29,12 @@ class Chat(BaseEntity):
         kw_only=True
     )
     
-    create_at: datetime = field(
-        default_factory=datetime.now,
-        kw_only=True
-    )
+    @classmethod
+    def create_chat(cls, title: Title) -> 'Chat':
+        new_chat = cls(title=title)
+        new_chat.register_event(NewChatCreated(chat_oid=new_chat.oid, chat_title=new_chat.title.as_generic_type()))
+        
+        return new_chat
     
     def add_message(self, message: Message):
         self.messages.add(message)
