@@ -1,7 +1,10 @@
-from punq import Container
+from punq import Container, Scope
 
-from logic.init import init_container
+from infra.repositories.messages import BaseChatRepository, MemoryChatRepository
+from logic.init import _init_container
 
 def init_dummy_container() -> Container:
-    container = init_container()
-    container.register()
+    container = _init_container()
+    container.register(BaseChatRepository, MemoryChatRepository, scope=Scope.singleton)
+    
+    return container

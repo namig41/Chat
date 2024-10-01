@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Any
 from domain.entities.messages import Chat
 from domain.values.messages import Title
-from infra.repositories.messages import BaseChatRepository
+from infra.repositories.messages.base import BaseChatRepository
 from logic.commands.base import BaseCommand, CommandHandler
 from logic.exceptions.messages import ChatWithThatTitleAlreadyExisitsException
 
@@ -11,7 +11,7 @@ class CreateChatCommand(BaseCommand):
     title: str
     
 @dataclass(frozen=True)
-class CreateChatCommandHandler(CommandHandler[CreateChatCommand]): 
+class CreateChatCommandHandler(CommandHandler[CreateChatCommand, Chat]): 
     chat_repository: BaseChatRepository
     
     async def handle(self, command: CreateChatCommand) -> Chat:

@@ -8,7 +8,6 @@ from domain.exceptions.base import ApplicationException
 from logic.commands.messages import CreateChatCommand
 from logic.init import init_container
 from logic.mediator import Mediator
-from application.api.dependencies.containers import container
 
 router = APIRouter(
     tags=['Chat'],
@@ -16,7 +15,7 @@ router = APIRouter(
 
 @router.post(
     '/',
-    response_model=CreateChatResponseSchema,
+    # response_model=CreateChatResponseSchema,
     status_code=status.HTTP_201_CREATED,
     description='Эндпоинт создает новый чат, если час с такими названием существует',
     responses={
@@ -28,8 +27,8 @@ async def create_chat_handler(scheme: CreateChatRequestSchema, container=Depends
     mediator: Mediator = container.resolve(Mediator)
     
     try:
-        chat, *_ = (await mediator.handle_commands(CreateChatCommand(title=scheme.title)))
+        chat, *_ = (await mediator.handle_command(CreateChatCommand(title=scheme.title)))
     except ApplicationException as exception:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={'error': exception.message})
     
-    return CreateChatResponseSchema.from_entity(chat)
+    return CreateChatResponseSchema.from_entiry(chat)

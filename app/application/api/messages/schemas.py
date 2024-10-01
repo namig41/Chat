@@ -9,7 +9,7 @@ class CreateChatResponseSchema(BaseModel):
     oid: str
     title: str
     
-    @staticmethod
+    @classmethod
     def from_entiry(csl, chat: Chat) -> 'CreateChatResponseSchema':
         return CreateChatResponseSchema(
             oid=chat.oid,
