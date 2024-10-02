@@ -49,6 +49,14 @@ remove-storage:
 logs:
 	${DC} -f ${APP_FILE} -f ${STORAGE_FILE} logs -f
 
+.PHONY: logs
+logs-app:
+	${DC} -f ${APP_FILE} logs -f
+
+.PHONY: logs
+logs-storage:
+	${DC} -f ${STORAGE_FILE} logs -f
+
 .PHONY: shell
 shell:
 	${DC} -f ${APP_FILE} exec ${SERVICE_NAME} /bin/sh

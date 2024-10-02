@@ -1,11 +1,11 @@
 from dataclasses import dataclass, field
 
 from domain.entities.messages import Chat
-from infra.repositories.messages.base import BaseChatRepository
+from infra.repositories.messages.base import BaseChatsRepository
 
 
 @dataclass
-class MemoryChatRepository(BaseChatRepository):
+class MemoryChatRepository(BaseChatsRepository):
     _saved_chats: list[Chat] = field(
         default_factory=list,
         kw_only=True
@@ -18,7 +18,15 @@ class MemoryChatRepository(BaseChatRepository):
             ))
         except StopIteration:
             return False
-        
+    
+    async def get_chat_by_oid(self, oid: str) -> Chat | None:
+        try:
+            return next(
+                chat for chat in self._saved_chats if chat.oid == oid
+            )
+        except StopIteration:
+            return None    
+    
     async def add_chat(self, chat: Chat) -> None:
         self._saved_chats.append(chat)
         

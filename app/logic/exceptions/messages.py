@@ -9,3 +9,11 @@ class ChatWithThatTitleAlreadyExisitsException(LogicExeption):
     @property
     def message(self):
         return f'Чат с таким названием существет {self.title}'
+    
+@dataclass(eq=False)
+class ChatNotFoundException(LogicExeption):
+    chat_oid: str
+    
+    @property
+    def message(self):
+        return f'Чат с таким идентификатором существует {self.chat_oid=}'

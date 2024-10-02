@@ -8,7 +8,7 @@ from domain.values.messages import Title, Text
 
 @dataclass(eq=False)
 class Message(BaseEntity):    
-    create_at: datetime = field(
+    created_at: datetime = field(
         default_factory=datetime.now,
         kw_only=True
     )
@@ -17,7 +17,7 @@ class Message(BaseEntity):
     
 @dataclass(eq=False)
 class Chat(BaseEntity):
-    create_at: datetime = field(
+    created_at: datetime = field(
         default_factory=datetime.now,
         kw_only=True
     )
