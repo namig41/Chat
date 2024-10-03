@@ -3,7 +3,7 @@ from fastapi import Depends, status
 from fastapi import HTTPException
 from fastapi.routing import APIRouter
 
-from application.api.messages.schemas import CreateChatRequestSchema, CreateChatResponseSchema, CreateMessageRequestScheme, CreateMessageResponseScheme
+from application.api.messages.schemas import CreateChatRequestSchema, CreateChatResponseSchema, CreateMessageRequestSchema, CreateMessageResponseSchema
 from application.api.schemas import ErrorSchema
 from domain.exceptions.base import ApplicationException
 from logic.commands.messages import CreateChatCommand, CreateMessageCommand
@@ -16,7 +16,6 @@ router = APIRouter(
 
 @router.post(
     '/',
-    # response_model=CreateChatResponseSchema,
     status_code=status.HTTP_201_CREATED,
     description='Эндпоинт создает новый чат, если час с такими названием существует',
     responses={
@@ -24,37 +23,40 @@ router = APIRouter(
         status.HTTP_400_BAD_REQUEST: {'model': ErrorSchema},
     },
 )
-async def create_chat_handler(scheme: CreateChatRequestSchema, container: Container = Depends(init_container)):
+async def create_chat_handler(
+    schema: CreateChatRequestSchema,
+    container: Container = Depends(init_container)
+) -> CreateChatResponseSchema:
     mediator: Mediator = container.resolve(Mediator)
     
     try:
-        chat, *_ = (await mediator.handle_command(CreateChatCommand(title=scheme.title)))
+        chat, *_ = (await mediator.handle_command(CreateChatCommand(title=schema.title)))
     except ApplicationException as exception:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={'error': exception.message})
     
-    return CreateChatResponseSchema.from_entiry(chat)
+    return CreateChatResponseSchema.from_entity(chat)
 
 @router.post(
     '/{chat_oid}/messages',
     status_code=status.HTTP_201_CREATED,
     description='Ручка на добавление нового сообщения в чат с переданным ObjectID',
     responses={
-        status.HTTP_201_CREATED: {'model': CreateMessageResponseScheme},
+        status.HTTP_201_CREATED: {'model': CreateMessageResponseSchema},
         status.HTTP_400_BAD_REQUEST: {'model': ErrorSchema}, 
     },
 )
 async def create_message_handler(
     chat_oid: str,
-    scheme: CreateMessageRequestScheme,
+    schema: CreateMessageRequestSchema,
     container: Container = Depends(init_container)
-) -> CreateMessageResponseScheme:
+) -> CreateMessageResponseSchema:
     
-    mediator: Mediator = container.resolve()
+    mediator: Mediator = container.resolve(Mediator)
     
     try:
-        message = await mediator.handle_command(CreateMessageCommand(text=scheme.text, chat_oid=chat_oid))
+        message, *_ = await mediator.handle_command(CreateMessageCommand(text=schema.text, chat_oid=chat_oid))
     except ApplicationException as exception:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={'error': exception.message})
     
-    return CreateMessageResponseScheme.from_entity(message)
+    return CreateMessageResponseSchema.from_entity(message)
         

@@ -6,7 +6,11 @@ from infra.repositories.messages.base import BaseChatsRepository, BaseMessagesRe
 
 from motor.core import AgnosticClient
 
-from infra.repositories.messages.converters import convert_chat_entity_to_document, convert_chat_document_to_entity
+from infra.repositories.messages.converters import (convert_chat_entity_to_document,
+                                                    convert_message_document_to_entity,
+                                                    convert_chat_document_to_entity,
+                                                    convert_message_entity_to_document
+                                                    )
 
 @dataclass
 class BaseMongoDBRepository(ABC):
@@ -37,12 +41,11 @@ class MongoDBChatsRepository(BaseChatsRepository, BaseMongoDBRepository):
 class MongoDBMessagesRepository(BaseMessagesRepository, BaseMongoDBRepository):
    
     async def add_message(self, chat_oid: str, message: Message) -> None:
-        collection = self._collection()
-        await collection.update_one(
+        await self._collection.update_one(
             filter={'oid': chat_oid},
             update={
                 '$push': {
-                    'messages': convert_chat_entity_to_document(message)
+                    'messages': convert_message_entity_to_document(message)
                 }
             }
         )        

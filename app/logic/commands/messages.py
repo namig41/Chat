@@ -1,7 +1,7 @@
 from dataclasses import dataclass
-from typing import Any, Text
+from typing import Any
 from domain.entities.messages import Chat, Message
-from domain.values.messages import Title
+from domain.values.messages import Title, Text
 from infra.repositories.messages.base import BaseChatsRepository, BaseMessagesRepository
 from logic.commands.base import BaseCommand, CommandHandler
 from logic.exceptions.messages import ChatNotFoundException, ChatWithThatTitleAlreadyExisitsException
@@ -9,8 +9,7 @@ from logic.exceptions.messages import ChatNotFoundException, ChatWithThatTitleAl
 @dataclass(frozen=True)
 class CreateChatCommand(BaseCommand):
     title: str
-    chat_oid: str
-    
+        
 @dataclass(frozen=True)
 class CreateChatCommandHandler(CommandHandler[CreateChatCommand, Chat]): 
     chats_repository: BaseChatsRepository
@@ -25,19 +24,24 @@ class CreateChatCommandHandler(CommandHandler[CreateChatCommand, Chat]):
     
 @dataclass(frozen=True)
 class CreateMessageCommand(BaseCommand):
-    title: str
+    text: str
     chat_oid: str
     
 @dataclass(frozen=True)
-class CreateMessageCommandHandler(CommandHandler[CreateChatCommand, Chat]): 
+class CreateMessageCommandHandler(CommandHandler[CreateChatCommand, Message]): 
     messages_repository: BaseMessagesRepository
     chats_repository: BaseChatsRepository
     
     
-    async def handle(self, command: CreateChatCommand) -> Chat:
-        if not (await self.chats_repository.get_chat_by_oid(oid=command.chat_oid)):
-            raise ChatNotFoundException(command.chat_oid)
+    async def handle(self, command: CreateChatCommand) -> Message:
+        chat = await self.chats_repository.get_chat_by_oid(oid=command.chat_oid)
+        
+        if not chat:
+            raise ChatNotFoundException(chat_oid=command.chat_oid)
         
         message = Message(text=Text(value=command.text))
-        await self.messages_repository.add_message(chat_oid=command.chat_oid, message=message)        
+        chat.add_message(message)
+        await self.messages_repository.add_message(chat_oid=command.chat_oid, message=message)     
+        
+        return message   
         

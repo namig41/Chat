@@ -10,22 +10,22 @@ class CreateChatResponseSchema(BaseModel):
     title: str
     
     @classmethod
-    def from_entiry(cls, chat: Chat) -> 'CreateChatResponseSchema':
+    def from_entity(cls, chat: Chat) -> 'CreateChatResponseSchema':
         return cls(
             oid=chat.oid,
             title=chat.title.as_generic_type()
         )
     
-class CreateMessageRequestScheme(BaseModel):
+class CreateMessageRequestSchema(BaseModel):
     text: str
     
-class CreateMessageResponseScheme(BaseModel):
+class CreateMessageResponseSchema(BaseModel):
     text: str
     oid: str
 
     @classmethod
-    def from_entiry(cls, message: Message) -> 'CreateMessageResponseScheme':
+    def from_entity(cls, message: Message) -> 'CreateMessageResponseSchema':
         return cls(
-            text=message.text,
+            text=message.text.as_generic_type(),
             oid=message.oid
         )
