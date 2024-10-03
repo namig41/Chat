@@ -14,6 +14,8 @@ class Message(BaseEntity):
     )
     
     text: Text
+    chat_oid: str
+    
     
 @dataclass(eq=False)
 class Chat(BaseEntity):
