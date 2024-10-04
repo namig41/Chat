@@ -3,7 +3,7 @@ from fastapi import Depends, status
 from fastapi import HTTPException
 from fastapi.routing import APIRouter
 
-from application.api.messages.schemas import ChatDetailSchema, CreateChatRequestSchema, CreateChatResponseSchema, CreateMessageRequestSchema, CreateMessageResponseSchema, MessageDetailSchema
+from application.api.messages.schemas import ChatDetailSchema, CreateChatRequestSchema, CreateChatResponseSchema, CreateMessageRequestSchema, CreateMessageResponseSchema
 from application.api.schemas import ErrorSchema
 from domain.exceptions.base import ApplicationException
 from logic.commands.messages import CreateChatCommand, CreateMessageCommand

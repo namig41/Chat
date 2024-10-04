@@ -1,7 +1,9 @@
 from abc import ABC
 from dataclasses import dataclass, field
+from typing import Iterable
 
 from domain.entities.messages import Chat, Message
+from infra.repositories.filters import GetMessagesFilter
 from infra.repositories.messages.base import BaseChatsRepository, BaseMessagesRepository
 
 from motor.core import AgnosticClient
@@ -30,8 +32,12 @@ class MongoDBChatsRepository(BaseChatsRepository, BaseMongoDBRepository):
         return bool(await self._collection.find_one(filter={'title': title}))
     
     async def get_chat_by_oid(self, oid: str) -> Chat:
-        chat_document = await self._collection.find_one(filter={'oid': oid}) 
-        return convert_chat_document_to_entity(chat_document) if chat_document else None
+        chat_document = await self._collection.find_one(filter={'oid': oid})
+        
+        if not chat_document:
+            return None
+        
+        return convert_chat_document_to_entity(chat_document)
         
     async def add_chat(self, chat: Chat) -> None:
         await self._collection.insert_one(convert_chat_entity_to_document(chat))        
@@ -40,12 +46,15 @@ class MongoDBChatsRepository(BaseChatsRepository, BaseMongoDBRepository):
 @dataclass
 class MongoDBMessagesRepository(BaseMessagesRepository, BaseMongoDBRepository):
    
-    async def add_message(self, chat_oid: str, message: Message) -> None:
-        await self._collection.update_one(
-            filter={'oid': chat_oid},
-            update={
-                '$push': {
-                    'messages': convert_message_entity_to_document(message)
-                }
-            }
-        )        
+    async def add_message(self, message: Message) -> None:
+        await self._collection.insert_one(
+            document=convert_message_entity_to_document(message)
+        )
+        
+    async def get_messages(self, chat_oid: str, filters: GetMessagesFilter) -> Iterable[Message]:
+        cursor = await self._collection.find({'chat_oid': chat_oid}).skip(filters.offset).limit(filters.offset.limit)
+        
+        return [
+            convert_message_document_to_entity(message_document=message_document)
+            async for message_document in cursor
+        ]
