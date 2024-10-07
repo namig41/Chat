@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Iterable
 from pydantic import BaseModel
 
+from application.api.schemas import BaseQueryResponseSchema
 from domain.entities.messages import Chat, Message
 
 class CreateChatRequestSchema(BaseModel):
@@ -59,3 +60,6 @@ class ChatDetailSchema(BaseModel):
             created_at=chat.created_at,
             messages=[MessageDetailSchema.from_entity(message) for message in chat.messages],
         )
+        
+class GetMessagesQueryResponseSchema(BaseQueryResponseSchema):
+    items: list[MessageDetailSchema]

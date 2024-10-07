@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from typing import Iterable
 
 from domain.entities.messages import Chat, Message
-from infra.repositories.filters import GetMessagesFilter
+from infra.repositories.filters.messages import GetMessagesFilters
 
 
 @dataclass
@@ -27,6 +27,6 @@ class BaseMessagesRepository(ABC):
         ...
         
     @abstractmethod
-    async def get_messages(self, filters: GetMessagesFilter) -> Iterable[Message]:
+    async def get_messages(self, filters: GetMessagesFilters) -> tuple[Iterable[Message], int]:
         ...
         
