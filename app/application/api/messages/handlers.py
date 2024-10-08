@@ -9,7 +9,7 @@ from application.api.schemas import ErrorSchema
 from domain.exceptions.base import ApplicationException
 from logic.commands.messages import CreateChatCommand, CreateMessageCommand
 from logic.init import init_container
-from logic.mediator import Mediator
+from logic.mediator.base import Mediator
 from logic.queries.messages import GetChatDetailQuery, GetMessagesQuery
 
 router = APIRouter(
@@ -79,7 +79,7 @@ async def get_chat_with_message_handler(
     mediator: Mediator = container.resolve(Mediator)
     
     try:
-        chat = await mediator.handler_query(GetChatDetailQuery(chat_oid=chat_oid))
+        chat = await mediator.handle_query(GetChatDetailQuery(chat_oid=chat_oid))
     except ApplicationException as exception:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={'error': exception.message})
     
@@ -103,7 +103,7 @@ async def get_chat_messages_handler(
     mediator: Mediator = container.resolve(Mediator)
     
     try: 
-        messages, count = await mediator.handler_query(
+        messages, count = await mediator.handle_query(
             GetMessagesQuery(chat_oid=chat_oid, filters=filters.to_infra())
         )
     except ApplicationException as exception:

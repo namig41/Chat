@@ -4,7 +4,7 @@ from punq import Container
 
 from infra.repositories.messages.base import BaseChatsRepository
 from infra.repositories.messages.mongo import MongoDBChatsRepository
-from logic.mediator import Mediator
+from logic.mediator.base import Mediator
 from tests.fixtures import init_dummy_container
     
 @fixture(scope='function')
