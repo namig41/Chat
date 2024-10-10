@@ -16,7 +16,6 @@ drop-app:
 rebuild-app:
 	${DC} -f ${APP_FILE} build --no-cache
 
-
 .PHONY: remove-app
 remove-app:
 	${DC} -f ${APP_FILE} down

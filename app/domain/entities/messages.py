@@ -3,7 +3,7 @@ from datetime import datetime
 from uuid import uuid4
 
 from domain.entities.base import BaseEntity
-from domain.events.messages import NewChatCreated, NewMessageReceivedEvent
+from domain.events.messages import NewChatCreatedEvent, NewMessageReceivedEvent
 from domain.values.messages import Title, Text
 
 @dataclass(eq=False)

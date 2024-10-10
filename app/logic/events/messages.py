@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from domain.events.messages import NewChatCreatedEvent
 from logic.commands.messages import CreateChatCommand
 from logic.events.base import EventHandler
 from logic.mediator.converters import convert_event_to_broker_message

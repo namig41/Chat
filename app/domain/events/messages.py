@@ -11,7 +11,7 @@ class NewMessageReceivedEvent(BaseEvent):
     chat_oid: str
     
 @dataclass
-class NewChatCreated(BaseEvent):
+class NewChatCreatedEvent(BaseEvent):
     event_title: ClassVar[str] = 'New Message Created'
     
     chat_oid: str
