@@ -4,7 +4,7 @@ from domain.events.base import BaseEvent
 
 @dataclass
 class NewMessageReceivedEvent(BaseEvent):
-    event_title: ClassVar[str] = 'New Message Recieved'
+    title: ClassVar[str] = 'New Message Recieved'
     
     message_text: str
     message_oid: str
@@ -12,7 +12,7 @@ class NewMessageReceivedEvent(BaseEvent):
     
 @dataclass
 class NewChatCreatedEvent(BaseEvent):
-    event_title: ClassVar[str] = 'New Message Created'
+    title: ClassVar[str] = 'New Message Created'
     
     chat_oid: str
     chat_title: str
