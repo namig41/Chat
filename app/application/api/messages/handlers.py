@@ -32,7 +32,7 @@ async def create_chat_handler(
     mediator: Mediator = container.resolve(Mediator)
     
     try:
-        chat, *_ = (await mediator.handle_command(CreateChatCommand(title=schema.title)))
+        chat, *_ = await mediator.handle_command(CreateChatCommand(title=schema.title))
     except ApplicationException as exception:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={'error': exception.message})
     

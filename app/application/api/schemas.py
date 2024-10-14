@@ -4,10 +4,10 @@ from pydantic import BaseModel
 class ErrorSchema(BaseModel):
     error: str
 
-R = TypeVar('R', bound=BaseModel)
+IT = TypeVar('IT')
     
-class BaseQueryResponseSchema(BaseModel, Generic[R]):
+class BaseQueryResponseSchema(BaseModel, Generic[IT]):
     count: int
     offset: int
     limit: int
-    items: R
+    items: IT

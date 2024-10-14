@@ -8,41 +8,29 @@ MESSAGING_FILE = docker_compose/messaging.yaml
 app-start:
 	${DC} -f ${APP_FILE} up -d
 
-.PHONY: drop-app
-drop-app:
+.PHONY: app-drop
+app-drop:
 	${DC} -f ${APP_FILE} down
 
-.PHONY: rebuild-app
-rebuild-app:
+.PHONY: app-rebuild
+app-rebuild:
 	${DC} -f ${APP_FILE} build --no-cache
 
-.PHONY: remove-app
-remove-app:
+.PHONY: app-remove
+app-remove:
 	${DC} -f ${APP_FILE} down
 	${DC} -f ${APP_FILE} rm -f ${SERVICE_NAME}
-
-.PHONY: all
-all:
-	${DC} -f ${APP_FILE} -f ${STORAGE_FILE} -f ${MESSAGING_FILE} up --build -d
-
-.PHONY: drop-all
-drop-all:
-	${DC} -f ${APP_FILE} -f ${STORAGE_FILE} down
-
-.PHONY: remove-all
-remove-all:
-	${DC} -f ${APP_FILE} -f ${STORAGE_FILE} -f ${MESSAGING_FILE} rm -f
 
 .PHONY: storage
 storage:
 	${DC} -f ${STORAGE_FILE} up --build -d
 
-.PHONY: drop-storage
-drop-storage:
+.PHONY: storage-drop
+storage-drop:
 	${DC} -f ${STORAGE_FILE} down
 
-.PHONY: remove-storage
-remove-storage:
+.PHONY: storage-remove
+storage-remove:
 	${DC} -f ${STORAGE_FILE} rm -f
 
 .PHONY: logs
@@ -50,11 +38,11 @@ logs:
 	${DC} -f ${APP_FILE} -f ${STORAGE_FILE} logs -f
 
 .PHONY: logs
-logs-app:
+app-logs:
 	${DC} -f ${APP_FILE} logs -f
 
 .PHONY: logs
-logs-storage:
+storage-logs:
 	${DC} -f ${STORAGE_FILE} logs -f
 
 .PHONY: shell
@@ -65,10 +53,22 @@ shell:
 kafka-start:
 	${DC} -f ${MESSAGING_FILE} up -d
 
-.PHONY: drop-kafka
-drop-kafka:
+.PHONY: kafka-drop
+kafka-drop:
 	${DC} -f ${MESSAGING_FILE} down
 
-.PHONY: logs
-logs-kafka:
+.PHONY: kafka-logs
+kafka-logs:
 	${DC} -f ${MESSAGING_FILE} logs -f
+
+.PHONY: all
+all:
+	${DC} -f ${APP_FILE} -f ${STORAGE_FILE} -f ${MESSAGING_FILE} up --build -d
+
+.PHONY: all-drop
+all-drop:
+	${DC} -f ${APP_FILE} -f ${STORAGE_FILE} down
+
+.PHONY: all-remove
+all-remove:
+	${DC} -f ${APP_FILE} -f ${STORAGE_FILE} -f ${MESSAGING_FILE} rm -f

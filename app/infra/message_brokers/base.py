@@ -8,7 +8,7 @@ from aiokafka.producer import AIOKafkaProducer
 @dataclass
 class BaseMessageBroker(ABC):
     producer: AIOKafkaProducer
-    consumer: AIOKafkaConsumer
+    # consumer: AIOKafkaConsumer
     
     @abstractmethod
     async def send_message(self, topic: str, value: bytes):

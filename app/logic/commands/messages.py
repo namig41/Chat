@@ -4,7 +4,7 @@ from domain.entities.messages import Chat, Message
 from domain.values.messages import Title, Text
 from infra.repositories.messages.base import BaseChatsRepository, BaseMessagesRepository
 from logic.commands.base import BaseCommand, CommandHandler
-from logic.exceptions.messages import ChatNotFoundException, ChatWithThatTitleAlreadyExisitsException
+from logic.exceptions.messages import ChatNotFoundException, ChatWithThatTitleAlreadyExistsException
 
 @dataclass(frozen=True)
 class CreateChatCommand(BaseCommand):
@@ -16,7 +16,7 @@ class CreateChatCommandHandler(CommandHandler[CreateChatCommand, Chat]):
     
     async def handle(self, command: CreateChatCommand) -> Chat:
         if await self.chats_repository.check_chat_exists_by_title(command.title):
-            raise ChatWithThatTitleAlreadyExisitsException(command.title)
+            raise ChatWithThatTitleAlreadyExistsException(command.title)
         title = Title(value=command.title)
         new_chat = Chat.create_chat(title=title)
         await self.chats_repository.add_chat(new_chat)
@@ -41,7 +41,8 @@ class CreateMessageCommandHandler(CommandHandler[CreateChatCommand, Message]):
         
         message = Message(text=Text(value=command.text), chat_oid=command.chat_oid)
         chat.add_message(message)
-        await self.messages_repository.add_message(message=message)     
+        await self.messages_repository.add_message(message=message)
+        await self._mediator.publish(chat.pull_events())
         
         return message   
         
