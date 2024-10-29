@@ -7,13 +7,22 @@ from aiokafka.producer import AIOKafkaProducer
 
 @dataclass
 class BaseMessageBroker(ABC):
-    producer: AIOKafkaProducer
-    # consumer: AIOKafkaConsumer
+    @abstractmethod
+    async def start(self):
+        ...
+        
+    @abstractmethod
+    async def stop(self):
+        ... 
     
     @abstractmethod
     async def send_message(self, topic: str, value: bytes):
         ...
         
     @abstractmethod
-    async def consume(self, topic: str):
+    async def start_consuming(self, topic: str):
+        ...
+        
+    @abstractmethod
+    async def stop_consuming(self, topic: str):
         ...
