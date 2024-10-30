@@ -25,7 +25,7 @@ async def websocket_endpoint(
     message_broker = container.resolve(BaseMessageBroker)
 
     try:
-        async for consumed_message in await message_broker.start_consuming(
+        async for consumed_message in message_broker.start_consuming(
             topic=config.new_message_received_topic.format(chat_oid=chat_oid),
         ):
             await websocket.send_json(consumed_message)
