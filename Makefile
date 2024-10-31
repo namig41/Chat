@@ -1,8 +1,12 @@
 DC = docker compose
-SERVICE_NAME = main-app
+EXEC = docker exec -it
+LOGS = docker logs
+ENV = --env-file .env
 APP_FILE = docker_compose/app.yaml
-STORAGE_FILE = docker_compose/storage.yaml
-MESSAGING_FILE = docker_compose/messaging.yaml
+MESSAGE_FILE = docker_compose/messaging.yaml
+STORAGES_FILE = docker_compose/storages.yaml
+APP_CONTAINER = main-app
+
 
 .PHONY: app
 app-start:
@@ -22,7 +26,7 @@ app-remove:
 	${DC} -f ${APP_FILE} rm -f ${SERVICE_NAME}
 
 .PHONY: storage
-storage:
+storage-start:
 	${DC} -f ${STORAGE_FILE} up --build -d
 
 .PHONY: storage-drop
@@ -63,7 +67,7 @@ kafka-logs:
 
 .PHONY: all
 all:
-	${DC} -f ${APP_FILE} -f ${STORAGE_FILE} -f ${MESSAGING_FILE} up --build -d
+	${DC} -f ${STORAGES_FILE} -f ${APP_FILE} -f ${MESSAGE_FILE} ${ENV} up --build -d
 
 .PHONY: all-drop
 all-drop:

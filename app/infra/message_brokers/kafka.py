@@ -17,14 +17,15 @@ class KafkaMessageBroker(BaseMessageBroker):
     
     async def start(self):
         await self.producer.start()
-        await self.consumer.start()
         
     async def stop(self):
         await self.producer.stop()
-        await self.consumer.stop()
     
     async def send_message(self, key: bytes, topic: str, value: bytes):
         await self.producer.send(topic=topic, key=key, value=value)
+        
+    async def consume(self) -> dict:
+        return await self.consumer.getone()
         
     async def start_consuming(self, topic: str):
         await self.consumer.start()
