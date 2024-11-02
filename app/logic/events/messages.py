@@ -1,8 +1,12 @@
 from dataclasses import dataclass
 
-from domain.events.messages import NewChatCreatedEvent, NewMessageReceivedEvent
+from domain.events.messages import (
+    NewChatCreatedEvent,
+    NewMessageReceivedEvent,
+)
 from logic.events.base import EventHandler
 from logic.mediator.converters import convert_event_to_broker_message
+
 
 @dataclass
 class NewChatCreateEventHandler(EventHandler[NewChatCreatedEvent, None]):
@@ -12,7 +16,8 @@ class NewChatCreateEventHandler(EventHandler[NewChatCreatedEvent, None]):
             value=convert_event_to_broker_message(event=event),
             key=str(event.event_id).encode(),
         )
-        
+
+
 @dataclass
 class NewMessageReceivedEventHandler(EventHandler[NewMessageReceivedEvent, None]):
     async def handle(self, event: NewMessageReceivedEvent) -> None:

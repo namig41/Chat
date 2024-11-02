@@ -1,19 +1,21 @@
 from dataclasses import dataclass
+
 from logic.exceptions.base import LogicExeption
 
 
 @dataclass(eq=False)
 class ChatWithThatTitleAlreadyExistsException(LogicExeption):
     title: str
-    
+
     @property
     def message(self):
-        return f'Чат с таким названием существет {self.title}'
-    
+        return f"Чат с таким названием существет {self.title}"
+
+
 @dataclass(eq=False)
 class ChatNotFoundException(LogicExeption):
     chat_oid: str
-    
+
     @property
     def message(self):
-        return f'Чат с таким идентификатором существует {self.chat_oid}'
+        return f"Чат с таким идентификатором существует {self.chat_oid}"

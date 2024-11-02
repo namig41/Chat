@@ -1,9 +1,13 @@
 from abc import ABC
 from copy import copy
-from dataclasses import dataclass, field
+from dataclasses import (
+    dataclass,
+    field,
+)
 from uuid import uuid4
 
 from domain.events.base import BaseEvent
+
 
 @dataclass
 class BaseEntity(ABC):
@@ -19,7 +23,7 @@ class BaseEntity(ABC):
     def __hash__(self) -> int:
         return hash(self.oid)
 
-    def __eq__(self, __value: 'BaseEntity') -> bool:
+    def __eq__(self, __value: "BaseEntity") -> bool:
         return self.oid == __value.oid
 
     def register_event(self, event: BaseEvent) -> None:
@@ -30,4 +34,3 @@ class BaseEntity(ABC):
         self._events.clear()
 
         return registered_events
-    
