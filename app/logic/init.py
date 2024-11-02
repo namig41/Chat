@@ -1,5 +1,7 @@
 from functools import lru_cache
+from uuid import uuid4
 
+from aiojobs import Scheduler
 from aiokafka import (
     AIOKafkaConsumer,
     AIOKafkaProducer,
@@ -112,7 +114,8 @@ def _init_container() -> Container:
             producer=AIOKafkaProducer(bootstrap_servers=config.kafka_url),
             consumer=AIOKafkaConsumer(
                 bootstrap_servers=config.kafka_url,
-                group_id="chat",
+                group_id=f"chat-{uuid4()}",
+                metadata_max_age_ms=30000,
             ),
         )
 
@@ -181,5 +184,7 @@ def _init_container() -> Container:
         instance=ConnectionManager(),
         scope=Scope.singleton,
     )
+
+    container.register(Scheduler, factory=lambda: Scheduler(), scope=Scope.singleton)
 
     return container

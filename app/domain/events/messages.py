@@ -19,3 +19,8 @@ class NewChatCreatedEvent(BaseEvent):
 
     chat_oid: str
     chat_title: str
+
+
+@dataclass
+class NewMessageReceivedFromBrokerEvent(BaseEvent):
+    pass

@@ -33,7 +33,7 @@ class KafkaMessageBroker(BaseMessageBroker):
     async def send_message(self, key: bytes, topic: str, value: bytes):
         await self.producer.send(topic=topic, key=key, value=value)
 
-    async def start_consuming(self, topic: str) -> AsyncIterator[dict]:
+    async def _start_consuming(self, topic: str) -> AsyncIterator[dict]:
         await self.consumer.start(topics=[topic])
         self.consumer.subscribe()
 
