@@ -34,4 +34,5 @@ async def websocket_endpoint(
             await connection_manager.send_all(key=chat_oid, json_message=message)
             
     finally:
+        await connection_manager.remove_connection(websocket=websocket, chat_oid=chat_oid)
         await message_broker.stop_consuming()
