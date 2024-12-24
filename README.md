@@ -1,4 +1,4 @@
-# FastAPI + Kafka DDD chat Application w\ MongoDB
+# FastAPI + Kafka DDD chat Application with MongoDB
 
 This is a basic template for Django projects configured to use Docker Compose, Makefile, and PostgreSQL.
 
